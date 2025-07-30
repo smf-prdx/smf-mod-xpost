@@ -45,7 +45,7 @@ final class XPost
     {
         global $txt;
 
-        loadLanguage('XPost');
+        loadLanguage('XPost/');
 
         $codes[] = [
             'tag' => 'xpost',
@@ -67,7 +67,7 @@ final class XPost
     {
         global $txt;
 
-        loadLanguage('XPost');
+        loadLanguage('XPost/');
 
         $buttons[count($buttons) - 1][] = [
             'image'       => 'xpost',
@@ -101,7 +101,7 @@ final class XPost
     {
         global $txt;
 
-        loadLanguage('XPost');
+        loadLanguage('XPost/');
 
         $embed = self::getTwitterEmbed($url);
         return $embed ?: '<div class="errorbox">'. $txt['xpost_cant_load_tweet'] .'</div>';
