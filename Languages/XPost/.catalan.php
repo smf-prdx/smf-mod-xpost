@@ -5,7 +5,7 @@
  */
 
 $txt['xpost_bbc'] = 'Insereix una publicació d\'X.com';
-$txt['xpost_settings'] = 'Configuració d\'X.com';
+$txt['xpost_settings'] = 'Configuració d\'XPost';
 $txt['xpost_theme'] = 'Tema d\'X.com';
 $txt['xpost_theme_light'] = 'Clar';
 $txt['xpost_theme_dark'] = 'Fosc';
