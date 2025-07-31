@@ -80,6 +80,15 @@ final class XPost
 
     public static function getTwitterEmbed(string $url): ?string
     {
+        // Sanitize URL to use as cache key
+        $cache_key = 'xpost_' . md5($url);
+
+        // Try to get from cache first
+        $cached = cache_get_data($cache_key, 86400); // 1 dia en segons
+        if (!empty($cached)) {
+            return $cached;
+        }
+
         // Define the API endpoint for Twitter's oEmbed service
         $api = 'https://publish.twitter.com/oembed?url=' . urlencode($url) . '&theme=light';
 
@@ -92,8 +101,15 @@ final class XPost
 
         if ($response) {
             $json = json_decode($response, true);
-            return $json['html'] ?? null;
+            $html = $json['html'] ?? null;
+
+            if ($html !== null) {
+                cache_put_data($cache_key, $html, 86400);
+            }
+
+            return $html;
         }
+
         return null;
     }
 
