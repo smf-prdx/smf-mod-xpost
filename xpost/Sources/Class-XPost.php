@@ -22,6 +22,22 @@ final class XPost
         add_integration_function('integrate_load_theme', __CLASS__ . '::loadTheme#', false, __FILE__);
         add_integration_function('integrate_bbc_codes', __CLASS__ . '::bbcCodes#', false, __FILE__);
         add_integration_function('integrate_bbc_buttons', __CLASS__ . '::bbcButtons#', false, __FILE__);
+        add_integration_function('integrate_general_mod_settings', __CLASS__ . '::modSettings#', false, __FILE__);
+
+    }
+
+    public static function modSettings(&$config_vars)
+    {
+        global $txt;
+
+        loadLanguage('XPost/');
+
+        $config_vars[] = ['', '']; // Visual separator
+        $config_vars[] = ['select', 'xpost_theme', [
+            'light' => $txt['xpost_theme_light'],
+            'dark' => $txt['xpost_theme_dark'],
+            'auto' => $txt['xpost_theme_auto'],
+        ]];
     }
 
     public function loadTheme(): void
@@ -80,7 +96,7 @@ final class XPost
 
     public static function getTwitterEmbed(string $url): ?string
     {
-        global $txt;
+        global $txt, $modSettings;
 
         loadLanguage('XPost/');
 
@@ -99,7 +115,8 @@ final class XPost
         }
 
         // Define the API endpoint for Twitter's oEmbed service
-        $apiUrl = 'https://publish.twitter.com/oembed?url=' . urlencode($url) . '&theme=light';
+        $theme = $modSettings['xpost_theme'] ?? 'light';
+        $apiUrl = 'https://publish.twitter.com/oembed?url=' . urlencode($url) . '&theme=' . $theme;
 
         // Try to fetch the API response, retrying once if it fails
         $response = false;
