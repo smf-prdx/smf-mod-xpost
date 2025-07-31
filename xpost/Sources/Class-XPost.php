@@ -84,23 +84,36 @@ final class XPost
 
         loadLanguage('XPost/');
 
+        $maxRetries = 5; // Maximum number of retries
+        $retryDelay = 200000; // Delay in microseconds (200ms)
+        $timeout = 5; // Timeout in seconds
+        $ttl = 86400; // Cache TTL in seconds (1 day)
+
         // Sanitize URL to use as cache key
         $cache_key = 'xpost_' . md5($url);
 
         // Try to get from cache first
-        $cached = cache_get_data($cache_key, 86400); // 1 dia en segons
+        $cached = cache_get_data($cache_key, $ttl);
         if (!empty($cached)) {
             return $cached;
         }
 
         // Define the API endpoint for Twitter's oEmbed service
-        $api = 'https://publish.twitter.com/oembed?url=' . urlencode($url) . '&theme=light';
+        $apiUrl = 'https://publish.twitter.com/oembed?url=' . urlencode($url) . '&theme=light';
 
         // Try to fetch the API response, retrying once if it fails
-        $response = @file_get_contents($api);
-        if (!$response) {
-            usleep(200000); // wait 0.2 seconds before retrying
-            $response = @file_get_contents($api);
+        $response = false;
+        for ($i = 0; $i < $maxRetries; $i++) {
+            $response = file_get_contents($apiUrl, false, stream_context_create([
+                'http' => [
+                    'timeout' => $timeout,
+                    'header' => "Accept: application/json\r\n"
+                ]
+            ]));
+            if ($response !== false) {
+                break;
+            }
+            usleep($retryDelay);
         }
 
         if ($response) {
@@ -121,7 +134,6 @@ final class XPost
                 return $json['html'];
             }
         }
-
         return '<div class="errorbox">'. $txt['xpost_cant_load_tweet'] .'</div>';;
     }
 }
