@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package-info xmlns="http://www.simplemachines.org/xml/package-info">
+    <id>prdx:xpost</id>
+    <name>xpost</name>
+    <version>1.0.0</version>
+    <type>modification</type>
+    <readme>README.md</readme>
+    <license>LICENSE</license>
+    <description>SMF 2.1.x hook-only modification to embed X.com posts via oEmbed using the [xpost] BBCode tag.</description>
+
+    <install for="2.1.*">
+   	<hook hook="integrate_pre_load" function="XPost::hooks#" file="$sourcedir/Class-XPost.php" priority="default" />
+        <require-file name="Sources/Class-XPost.php" destination="$sourcedir" />
+        <require-dir name="Languages/XPost" destination="$languagedir" />
+        <require-file name="Themes/default/images/bbc/xpost.png" destination="$themedir/images/bbc" />
+        <redirect url="?action=admin;area=modsettings;sa=xpost" />
+    </install>
+
+    <uninstall for="2.1.*">
+   	<hook hook="integrate_pre_load" function="XPost::hooks#" file="$sourcedir/Class-XPost.php" reverse="true" />
+        <remove-file name="$sourcedir/Class-XPost.php" />
+        <remove-file name="$themedir/images/bbc/xpost.png" />
+        <remove-dir name="$languagedir/XPost" />
+    </uninstall>
+</package-info>
