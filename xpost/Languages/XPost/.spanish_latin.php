@@ -1,1 +1,0 @@
-.spanish_es.php

@@ -2,7 +2,7 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info">
     <id>prdx:xpost</id>
     <name>xpost</name>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <type>modification</type>
     <readme>README.md</readme>
     <license>LICENSE</license>
