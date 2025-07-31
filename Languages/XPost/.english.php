@@ -5,6 +5,7 @@
  */
 
 $txt['xpost_bbc'] = 'Insert X.com post';
+$txt['xpost_settings'] = 'XPost Settings';
 $txt['xpost_theme'] = 'X.com\'s theme';
 $txt['xpost_theme_light'] = 'Light';
 $txt['xpost_theme_dark'] = 'Dark';

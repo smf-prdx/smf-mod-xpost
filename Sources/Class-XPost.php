@@ -32,7 +32,7 @@ final class XPost
 
         loadLanguage('XPost/');
 
-        $config_vars[] = ['', '']; // Visual separator
+		$config_vars[] = ['title', 'xpost_settings'];
         $config_vars[] = ['select', 'xpost_theme', [
             'light' => $txt['xpost_theme_light'],
             'dark' => $txt['xpost_theme_dark'],
