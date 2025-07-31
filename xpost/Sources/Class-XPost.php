@@ -57,7 +57,7 @@ final class XPost
                 if (strpos($data, '/status/') === false) {
                     $tag['content'] = '<div class="errorbox">' . $txt['xpost_link_error'] . '</div>';
                 } else {
-                    $tag['content'] = XPost::parseXPost($data);
+                    $tag['content'] = self::getTwitterEmbed($data);
                 }
             }
         ];
@@ -80,6 +80,10 @@ final class XPost
 
     public static function getTwitterEmbed(string $url): ?string
     {
+        global $txt;
+
+        loadLanguage('XPost/');
+
         // Sanitize URL to use as cache key
         $cache_key = 'xpost_' . md5($url);
 
@@ -101,25 +105,23 @@ final class XPost
 
         if ($response) {
             $json = json_decode($response, true);
-            $html = $json['html'] ?? null;
 
-            if ($html !== null) {
-                cache_put_data($cache_key, $html, 86400);
+            // Basic error handling
+            if (!empty($json['errors'])) {
+                foreach ($json['errors'] as $error) {
+                    if (strpos($error['message'], 'not authorized') !== false || strpos($error['message'], 'private') !== false) {
+                        return '<div class="errorbox">' . $txt['xpost_not_authorized'] . '</div>';
+                    }
+                }
+                return '<div class="errorbox">'. $txt['xpost_cant_load_tweet'] .'</div>';;
             }
 
-            return $html;
+            if (!empty($json['html'])) {
+                cache_put_data($cache_key, $json['html'], 86400);
+                return $json['html'];
+            }
         }
 
-        return null;
-    }
-
-    public static function parseXPost(string $url): string
-    {
-        global $txt;
-
-        loadLanguage('XPost/');
-
-        $embed = self::getTwitterEmbed($url);
-        return $embed ?: '<div class="errorbox">'. $txt['xpost_cant_load_tweet'] .'</div>';
+        return '<div class="errorbox">'. $txt['xpost_cant_load_tweet'] .'</div>';;
     }
 }
