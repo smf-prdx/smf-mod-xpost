@@ -120,7 +120,7 @@ final class XPost
         // Try to fetch the API response, retrying once if it fails
         $response = false;
         for ($i = 0; $i < $maxRetries; $i++) {
-            $response = file_get_contents($apiUrl, false, stream_context_create([
+            $response = @file_get_contents($apiUrl, false, stream_context_create([
                 'http' => [
                     'timeout' => $timeout,
                     'header' => "Accept: application/json\r\n"
