@@ -9,7 +9,6 @@
  * @copyright 2025, prdx
  * @license https://opensource.org/licenses/BSD-3-Clause BSD
  *
- * @version 1.0.0
  */
 
 if (!defined('SMF'))
@@ -32,7 +31,7 @@ final class XPost
 
         loadLanguage('XPost/');
 
-		$config_vars[] = ['title', 'xpost_settings'];
+        $config_vars[] = ['title', 'xpost_settings'];
         $config_vars[] = ['select', 'xpost_theme', [
             'light' => $txt['xpost_theme_light'],
             'dark' => $txt['xpost_theme_dark'],
