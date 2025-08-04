@@ -72,7 +72,7 @@ final class XPost
                 if (strpos($data, '/status/') === false) {
                     $tag['content'] = '<div class="errorbox">' . $txt['xpost_link_error'] . '</div>';
                 } else {
-                    $tag['content'] = self::getTwitterEmbed($data);
+                    $tag['content'] = self::getTwitterEmbed($data) . '<span style="display:none">.</span>';
                 }
             }
         ];
@@ -93,7 +93,7 @@ final class XPost
         ];
     }
 
-    public static function getTwitterEmbed(string $url): ?string
+    public static function getTwitterEmbed(string $data): ?string
     {
         global $txt, $modSettings;
 
@@ -105,6 +105,7 @@ final class XPost
         $ttl = 86400; // Cache TTL in seconds (1 day)
 
         // Sanitize URL to use as cache key
+        $url = trim($data);
         $cache_key = 'xpost_' . md5($url);
 
         // Try to get from cache first
@@ -120,7 +121,7 @@ final class XPost
         // Try to fetch the API response, retrying once if it fails
         $response = false;
         for ($i = 0; $i < $maxRetries; $i++) {
-            $response = file_get_contents($apiUrl, false, stream_context_create([
+            $response = @file_get_contents($apiUrl, false, stream_context_create([
                 'http' => [
                     'timeout' => $timeout,
                     'header' => "Accept: application/json\r\n"

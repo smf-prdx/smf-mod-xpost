@@ -12,3 +12,9 @@
 ## 1.1.1: Fixed mod settings (2025/7/31)
 
 * Make mod settings display in its own section
+
+## 1.1.2: Minor fixes (2025/8/04)
+
+* Improve url sanitizing
+* Use a better module name
+* Allow messages with only this tag
