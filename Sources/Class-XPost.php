@@ -72,7 +72,7 @@ final class XPost
                 if (strpos($data, '/status/') === false) {
                     $tag['content'] = '<div class="errorbox">' . $txt['xpost_link_error'] . '</div>';
                 } else {
-                    $tag['content'] = self::getTwitterEmbed($data);
+                    $tag['content'] = self::getTwitterEmbed($data) . '<span style="display:none">.</span>';
                 }
             }
         ];
