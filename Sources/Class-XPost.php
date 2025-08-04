@@ -93,7 +93,7 @@ final class XPost
         ];
     }
 
-    public static function getTwitterEmbed(string $url): ?string
+    public static function getTwitterEmbed(string $data): ?string
     {
         global $txt, $modSettings;
 
@@ -105,6 +105,7 @@ final class XPost
         $ttl = 86400; // Cache TTL in seconds (1 day)
 
         // Sanitize URL to use as cache key
+        $url = trim($data);
         $cache_key = 'xpost_' . md5($url);
 
         // Try to get from cache first
