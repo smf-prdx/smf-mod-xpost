@@ -7,17 +7,16 @@
     <install for="2.1.*">
         <readme parsebbc="false" type="file">README.md</readme>
         <license type="file" parsebbc="false">LICENSE</license>
-        <hook hook="integrate_pre_load" function="XPost::hooks#" file="$sourcedir/Class-XPost.php" priority="default" />
-        <require-file name="Sources/Class-XPost.php" destination="$sourcedir" />
-        <require-dir name="Languages/XPost" destination="$languagedir" />
-        <require-file name="Themes/default/images/bbc/xpost.png" destination="$themedir/images/bbc" />
-        <redirect url="?action=admin;area=modsettings;sa=xpost" />
+        <hook hook="integrate_pre_load" function="XPost::hooks#" file="$sourcedir/Class-XPost.php"/>
+        <redirect url="?action=admin;area=modsettings;sa=xpost"/>
+        <require-file name="Sources/Class-XPost.php" destination="$sourcedir">Adding source file Class-Xpost.php</require-file>
+        <require-file name="Themes/default/images/bbc/xpost.png" destination="$themedir/images/bbc">Adding xpost.png icon</require-file>
+        <require-dir name="Themes/default/languages/XPost" destination="$languagedir">Adding language files</require-dir>
     </install>
-
     <uninstall for="2.1.*">
         <hook hook="integrate_pre_load" function="XPost::hooks#" file="$sourcedir/Class-XPost.php" reverse="true" />
-        <remove-file name="$sourcedir/Class-XPost.php" />
-        <remove-file name="$themedir/images/bbc/xpost.png" />
-        <remove-dir name="$languagedir/XPost" />
+        <remove-file name="$sourcedir/Class-XPost.php">Removing source file Class-XPost.php</remove-file>
+        <remove-file name="$themedir/images/bbc/xpost.png">Removing xpost.png icon</remove-file>
+        <remove-dir name="$languagedir/XPost">Removing language files</remove-dir>
     </uninstall>
 </package-info>
