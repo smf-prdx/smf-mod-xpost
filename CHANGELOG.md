@@ -13,8 +13,13 @@
 
 * Make mod settings display in its own section
 
-## 1.1.2: Minor fixes (2025/8/04)
+## 1.1.2: Minor fixes (2025/8/4)
 
 * Improve url sanitizing
 * Use a better module name
 * Allow messages with only this tag
+
+## 1.1.3: Update package-info.xml (2025/8/7)
+
+* Minor change to use default language for included README.md
+* Improved local loadLanguage function to avoid non-fatal warnings.
