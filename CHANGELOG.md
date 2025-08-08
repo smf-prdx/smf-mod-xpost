@@ -23,3 +23,8 @@
 
 * Minor change to use default language for included README.md
 * Improved local loadLanguage function to avoid non-fatal warnings.
+
+## 1.1.4: Several improvements (2025/8/8)
+
+* Avoid loading twitter-js script every time there is a [xpost] tag.
+* Improve twitter url handling to allow all kind of links.

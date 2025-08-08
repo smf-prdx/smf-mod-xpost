@@ -18,7 +18,7 @@ final class XPost
 {
     public function hooks(): void
     {
-        add_integration_function('integrate_load_theme', __CLASS__ . '::loadTheme#', false, __FILE__);
+        add_integration_function('integrate_pre_javascript_output', __CLASS__ . '::injectScript', false, __FILE__);
         add_integration_function('integrate_bbc_codes', __CLASS__ . '::bbcCodes#', false, __FILE__);
         add_integration_function('integrate_bbc_buttons', __CLASS__ . '::bbcButtons#', false, __FILE__);
         add_integration_function('integrate_general_mod_settings', __CLASS__ . '::modSettings#', false, __FILE__);
@@ -50,21 +50,28 @@ final class XPost
         ]];
     }
 
-    public function loadTheme(): void
+    // Inject the Twitter script into the page if the mod is enabled.
+    // This will load the Twitter widgets.js script asynchronously just once per page.
+    public static function injectScript($do_deferred): void
     {
-        global $context;
+        addInlineJavaScript('
+            window.twttr = (function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0],
+                    t = window.twttr || {};
+                if (d.getElementById(id)) return t;
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "https://platform.twitter.com/widgets.js";
+                fjs.parentNode.insertBefore(js, fjs);
 
-        // Only load Twitter's JS if [xpost] is used in that page.
-        if (! empty($context['buffer']) && strpos($context['buffer'], '[xpost]') !== false) {
-            addInlineJavaScript('
-                if (!document.getElementById("twitter-wjs")) {
-                    var s = document.createElement("script");
-                    s.id = "twitter-wjs";
-                    s.src = "https://platform.twitter.com/widgets.js";
-                    document.head.appendChild(s);
-                }
-            ');
-        }
+                t._e = [];
+                t.ready = function(f) {
+                    t._e.push(f);
+                };
+
+                return t;
+            }(document, "script", "twitter-wjs"));
+        ');
     }
 
     public function bbcCodes(array &$codes): void
@@ -80,7 +87,8 @@ final class XPost
             'validate' => function (&$tag, $data) {
                 global $txt;
 
-                if (strpos($data, '/status/') === false) {
+                // Validate the input data to ensure it is a valid Twitter URL (posts, timelines, profiles, likes, moments, etc.)
+                if (!preg_match('~^https?://(x\.com|twitter\.com)/([a-zA-Z0-9_]+)(/[^?\s]*)?(?:\?.*)?$~i', $data)) {
                     $tag['content'] = '<div class="errorbox">' . $txt['xpost_link_error'] . '</div>';
                 } else {
                     $tag['content'] = self::getTwitterEmbed($data) . '<span style="display:none">.</span>';
@@ -127,7 +135,7 @@ final class XPost
 
         // Define the API endpoint for Twitter's oEmbed service
         $theme = $modSettings['xpost_theme'] ?? 'light';
-        $apiUrl = 'https://publish.twitter.com/oembed?url=' . urlencode($url) . '&theme=' . $theme;
+        $apiUrl = 'https://publish.twitter.com/oembed?url=' . urlencode($url) . '&theme=' . $theme . '&omit_script=1';
 
         // Try to fetch the API response, retrying once if it fails
         $response = false;
