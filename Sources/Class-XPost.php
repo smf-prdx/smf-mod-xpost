@@ -88,10 +88,11 @@ final class XPost
                 global $txt;
 
                 // Validate the input data to ensure it is a valid Twitter URL (posts, timelines, profiles, likes, moments, etc.)
-                if (!preg_match('~^https?://(x\.com|twitter\.com)/([a-zA-Z0-9_]+)(/[^?\s]*)?(?:\?.*)?$~i', $data)) {
+                $url = preg_replace('/\?.*/', '', trim($data));
+                if (!preg_match('~^https://(x\.com|twitter\.com)/~i', $url)) {
                     $tag['content'] = '<div class="errorbox">' . $txt['xpost_link_error'] . '</div>';
                 } else {
-                    $tag['content'] = self::getTwitterEmbed($data) . '<span style="display:none">.</span>';
+                    $tag['content'] = self::getTwitterEmbed($url) . '<span style="display:none">.</span>';
                 }
             }
         ];
@@ -112,7 +113,7 @@ final class XPost
         ];
     }
 
-    public static function getTwitterEmbed(string $data): ?string
+    public static function getTwitterEmbed(string $url): ?string
     {
         global $txt, $modSettings;
 
@@ -123,8 +124,6 @@ final class XPost
         $timeout = 5; // Timeout in seconds
         $ttl = 86400; // Cache TTL in seconds (1 day)
 
-        // Sanitize URL to use as cache key
-        $url = trim($data);
         $cache_key = 'xpost_' . md5($url);
 
         // Try to get from cache first
