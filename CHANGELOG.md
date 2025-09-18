@@ -28,3 +28,7 @@
 
 * Avoid loading twitter-js script every time there is a [xpost] tag.
 * Improve twitter url handling to allow all kind of links.
+
+## 1.1.5: Small fixes (2025/9/18)
+
+* Use $txt via closure use instead of global inside anonymous function
