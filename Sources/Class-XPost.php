@@ -84,9 +84,7 @@ final class XPost
             'tag' => 'xpost',
             'type' => 'unparsed_content',
             'block_level' => true,
-            'validate' => function (&$tag, $data) {
-                global $txt;
-
+            'validate' => function (&$tag, $data) use ($txt) {
                 // Validate the input data to ensure it is a valid Twitter URL (posts, timelines, profiles, likes, moments, etc.)
                 $url = preg_replace('/\?.*/', '', trim($data));
                 if (!preg_match('~^https://(x\.com|twitter\.com)/~i', $url)) {
@@ -169,6 +167,6 @@ final class XPost
                 return $json['html'];
             }
         }
-        return '<div class="errorbox">'. $txt['xpost_cant_load_tweet'] .'</div>';;
+        return '<div class="errorbox">'. $txt['xpost_cant_load_tweet'] .'</div>';
     }
 }
